@@ -5,7 +5,7 @@
 	<artifactId>ContractFirstWSClient</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>CXF JAX-WS Client demo</name>
+	<name>CXF JAX-WS Client Sample</name>
 	<description>Simple Spring MVC and CXF client project consuming a CXF Webservice</description>
 	<properties>
 		<cxf.version>3.1.6</cxf.version>
