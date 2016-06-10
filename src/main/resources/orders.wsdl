@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.site.com/service/Orders/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.xmlsoap.org/soap/http" xmlns:ns1="http://www.site.com/schema/Order" name="Orders" targetNamespace="http://www.site.com/service/Orders/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.site.com/schema/Order" elementFormDefault="qualified" targetNamespace="http://www.site.com/schema/Order" version="1.0">
+
+  <xs:element name="orderInquiry" type="tns:OrderInquiryType"/>
+
+  <xs:element name="orderInquiryResponse" type="tns:OrderInquiryResponseType"/>
+
+  <xs:complexType name="OrderInquiryType">
+    <xs:sequence>
+      <xs:element name="uniqueOrderId" type="xs:int"/>
+      <xs:element name="orderQuantity" type="xs:int"/>
+      <xs:element name="accountId" type="xs:int"/>
+      <xs:element name="ean13" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="OrderInquiryResponseType">
+    <xs:sequence>
+      <xs:element name="order" type="tns:OrderType"/>
+      <xs:element name="account" type="tns:AccountType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="OrderType">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="orderItems" type="tns:OrderItemType"/>
+      <xs:element name="orderStatus" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="OrderItemType">
+    <xs:sequence>
+      <xs:element name="lineNumber" type="xs:int"/>
+      <xs:element minOccurs="0" name="expectedShippingDate" type="xs:date"/>
+      <xs:element name="book" type="tns:BookType"/>
+      <xs:element name="price" type="xs:decimal"/>
+      <xs:element name="quantityShipped" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="BookType">
+    <xs:sequence>
+      <xs:element name="ean13" type="xs:long"/>
+      <xs:element name="title" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="AccountType">
+    <xs:sequence>
+      <xs:element name="accountId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="OrderStatusType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="READY"/>
+      <xs:enumeration value="FULFILLED"/>
+      <xs:enumeration value="BACKORDER"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="ProcessOrderPlacement">
+    <wsdl:part element="ns1:orderInquiry" name="orderInquiry">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ProcessOrderPlacementResponse">
+    <wsdl:part element="ns1:orderInquiryResponse" name="orderInquiryResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="Orders">
+    <wsdl:operation name="ProcessOrderPlacement">
+      <wsdl:input message="tns:ProcessOrderPlacement" name="ProcessOrderPlacement">
+    </wsdl:input>
+      <wsdl:output message="tns:ProcessOrderPlacementResponse" name="ProcessOrderPlacementResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="OrdersSoapBinding" type="tns:Orders">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="ProcessOrderPlacement">
+      <soap:operation soapAction="http://www.site.com/service/Orders/ProcessOrderPlacement" style="document"/>
+      <wsdl:input name="ProcessOrderPlacement">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ProcessOrderPlacementResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Orders">
+    <wsdl:port binding="tns:OrdersSoapBinding" name="OrdersSOAP">
+      <soap:address location="http://localhost:9090/ContractFirstWS/services/orders"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
